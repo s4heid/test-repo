@@ -1,0 +1,6 @@
+preferredBranch: 'develop'
+# flag indicating whether branch-switcher should comment
+# responseRequired: true
+# Comment to post when switching the branch
+response: >
+  The base branch of this pull request has been automatically updated to the `develop` branch. Thank you for your contributions.
