@@ -1,6 +1,9 @@
 preferredBranch: 'develop'
 exclude:
-  - dont-switch
+  - branch: dont-switch
+  - branch: another-dont-switch-branch
+  - label: ignore-me
+  - label: ignore-me-always
 # Comment to post when switching the branch
 switchComment: >
   Sorry for interrupting. Just changed the base branch to `develop`.
