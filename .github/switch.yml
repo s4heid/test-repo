@@ -6,4 +6,4 @@ exclude:
   - label: ignore-me-always
 # Comment to post when switching the branch
 switchComment: >
-  @{{author}}, sorry for interrupting. Just changed the base branch to `{{preferredBranch}}`.
+  thanks @{{author}} for your contributions. You are the best. :1st_place_medal:
