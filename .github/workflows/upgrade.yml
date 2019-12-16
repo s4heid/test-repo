@@ -23,9 +23,10 @@ jobs:
       - name: Create Update Summary
         id: summary
         run: |
-          if git diff-index --cached --quiet HEAD -- config/blobs.yml ; then
-            echo ::set-output name=pr_body::"':robot:' This is an automated pull request with updates of bosh release dependencies."
+          if git diff-index --cached --quiet HEAD ; then
+            echo "no changes in git detected" ; exit 0
           fi
+          echo ::set-output name=pr_body::"':robot:' This is an automated pull request with updates of bosh release dependencies."
       - name: Create Pull Request
         if: steps.summary.outputs.pr_body != ''
         uses: peter-evans/create-pull-request@v1
