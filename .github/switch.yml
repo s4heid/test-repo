@@ -4,6 +4,7 @@ exclude:
   - branch: another-dont-switch-branch
   - label: ignore-me
   - label: ignore-me-always
+  - label: dependencies
 # Comment to post when switching the branch
 switchComment: >
   thanks @{{author}} for your contributions. You are the best. :1st_place_medal:
