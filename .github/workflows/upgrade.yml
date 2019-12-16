@@ -1,0 +1,39 @@
+name: Blobs Upgrader
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  upgrade:
+    name: Upgrade bosh blobs
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          submodules: recursive
+      - name: Upgrade bosh blobs
+        uses: s4heid/bosh-blobs-upgrader-action@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repository: .
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update bosh blobs
+          author-email: s4heid@users.noreply.github.com
+          author-name: Sebastian Heid
+          title: 'Update bosh blobs'
+          body: ":robot: This is an automated pull request"
+          labels: dependencies
+          branch: blobs
+          branch-suffix: short-commit-hash
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pr_number }}"

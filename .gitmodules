@@ -1,0 +1,3 @@
+[submodule "athens-bosh-release"]
+	path = athens-bosh-release
+	url = https://github.com/s4heid/athens-bosh-release.git
