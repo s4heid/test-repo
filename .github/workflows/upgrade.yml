@@ -22,8 +22,8 @@ jobs:
             mkdir ./changelog
           fi
           cat > ./changelog/"CHANGELOG_$(date +%s)" <<EOF
-Today $(date -u) some blobs have been updated.
-EOF
+          Today $(date -u) some blobs have been updated.
+          EOF
           echo ::set-output name=pr_body::"This is an automated pull request with updates of bosh release dependencies."
       - name: Create Pull Request
         if: steps.summary.outputs.pr_body != ''
