@@ -11,35 +11,33 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          submodules: recursive
-      - name: Upgrade bosh blobs
-        uses: s4heid/bosh-blobs-upgrader-action@dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          repository: .
+        uses: actions/checkout@v2
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
       - name: Create Update Summary
         id: summary
         run: |
-          if git diff-index --cached --quiet HEAD ; then
-            echo "no changes in git detected" ; exit 0
+          ls -al athens-bosh-release/src
+          if [ ! -d ./changelog ]; then
+            mkdir ./changelog
           fi
-          # echo ::set-output name=pr_body::"This is an automated pull request with updates of bosh release dependencies."
+          cat > ./changelog/"CHANGELOG_$(date +%s)" <<EOF
+Today $(date -u) some blobs have been updated.
+EOF
+          echo ::set-output name=pr_body::"This is an automated pull request with updates of bosh release dependencies."
       - name: Create Pull Request
         if: steps.summary.outputs.pr_body != ''
-        uses: peter-evans/create-pull-request@v1
+        uses: peter-evans/create-pull-request@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update bosh blobs
-          author-email: s4heid@users.noreply.github.com
-          author-name: Sebastian Heid
+          committer: Sebastian Heid <s4heid@users.noreply.github.com>
+          author: Sebastian Heid <s4heid@users.noreply.github.com>
           title: 'Automated bosh blobs update'
           body: ${{ steps.summary.outputs.pr_body }}
           labels: dependencies
+          reviewers: s4heid
           branch: blobs
-          branch-suffix: short-commit-hash
       - name: Check outputs
         run: |
           echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
