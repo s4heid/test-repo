@@ -14,31 +14,14 @@ jobs:
         uses: actions/checkout@v2
       - name: Checkout submodules
         run: git submodule update --init --recursive
-      - name: Create Update Summary
-        id: summary
-        run: |
-          ls -al athens-bosh-release/src
-          if [ ! -d ./changelog ]; then
-            mkdir ./changelog
-          fi
-          cat > ./changelog/"CHANGELOG_$(date +%s)" <<EOF
-          Today $(date -u) some blobs have been updated.
-          EOF
-          echo ::set-output name=pr_body::"This is an automated pull request with updates of bosh release dependencies."
-      - name: Create Pull Request
-        if: steps.summary.outputs.pr_body != ''
-        uses: peter-evans/create-pull-request@v2
+      - name: Download BOSH CLI
+        uses: docker://dpb587/gget
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update bosh blobs
-          committer: Sebastian Heid <s4heid@users.noreply.github.com>
-          author: Sebastian Heid <s4heid@users.noreply.github.com>
-          title: 'Automated bosh blobs update'
-          body: ${{ steps.summary.outputs.pr_body }}
-          labels: dependencies
-          reviewers: s4heid
-          branch: blobs
-      - name: Check outputs
+          args: gget --exec github.com/cloudfoundry/bosh-cli bosh=bosh-cli-*-linux-amd64
+      - name: Install BOSH CLI
         run: |
-          echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pr_number }}"
+          mkdir -p  $GITHUB_WORKSPACE/bin
+          mv bosh $GITHUB_WORKSPACE/bosh
+          echo "::add-path::$GITHUB_WORKSPACE/bin"
+      - name: BOSH help
+        run: bosh --help
