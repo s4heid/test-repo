@@ -21,7 +21,7 @@ jobs:
       - name: Install BOSH CLI
         run: |
           mkdir -p  $GITHUB_WORKSPACE/bin
-          mv bosh $GITHUB_WORKSPACE/bosh
+          mv ./bosh $GITHUB_WORKSPACE/bin/
           echo "::add-path::$GITHUB_WORKSPACE/bin"
       - name: BOSH help
         run: bosh --help
